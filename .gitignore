@@ -1,0 +1,20 @@
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+*.log
+**/bin/
+**/obj/
+*.vsconfig
+*.DS_Store
+
+# SQL Server LocalDB
+*.mdf
+*.ldf
