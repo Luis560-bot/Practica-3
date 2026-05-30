@@ -1,11 +1,18 @@
 using System.Net.Http.Json;
-using System.Text.Json;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Practica3.Controllers;
 
 public record ExternalTareaDto(int externalId, string titulo, bool completado);
+
+internal sealed class ExternalTodoApiItem
+{
+    public int Id { get; set; }
+
+    public string? Title { get; set; }
+
+    public bool Completed { get; set; }
+}
 
 [ApiController]
 [Route("api/tareas-externas")]
@@ -24,16 +31,13 @@ public class TareasExternasController : ControllerBase
         var client = _factory.CreateClient("JsonPlaceholder");
         try
         {
-            var todos = await client.GetFromJsonAsync<IEnumerable<JsonElement>>("todos");
+            var todos = await client.GetFromJsonAsync<List<ExternalTodoApiItem>>("todos");
             if (todos is null)
                 return StatusCode(502, new { Error = "La API externa no respondió correctamente." });
 
             var mapped = todos.Select(t =>
             {
-                var id = t.GetProperty("id").GetInt32();
-                var title = t.GetProperty("title").GetString() ?? string.Empty;
-                var completed = t.GetProperty("completed").GetBoolean();
-                return new ExternalTareaDto(id, title, completed);
+                return new ExternalTareaDto(t.Id, t.Title ?? string.Empty, t.Completed);
             });
 
             return Ok(mapped);
@@ -60,14 +64,14 @@ public class TareasExternasController : ControllerBase
 
             response.EnsureSuccessStatusCode();
 
-            var t = await response.Content.ReadFromJsonAsync<JsonElement>();
-            if (t.ValueKind == JsonValueKind.Undefined)
+            var t = await response.Content.ReadFromJsonAsync<ExternalTodoApiItem>();
+            if (t is null)
                 return NotFound();
 
             var ext = new ExternalTareaDto(
-                t.GetProperty("id").GetInt32(),
-                t.GetProperty("title").GetString() ?? string.Empty,
-                t.GetProperty("completed").GetBoolean()
+                t.Id,
+                t.Title ?? string.Empty,
+                t.Completed
             );
 
             return Ok(ext);
