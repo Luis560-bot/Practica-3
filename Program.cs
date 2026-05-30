@@ -19,11 +19,9 @@ builder.Services.AddSingleton<IMlSentimentService, MlSentimentService>();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// Habilitar Swagger y Swagger UI en todos los entornos para facilitar pruebas.
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.MapGet("/", () => Results.Text(@"<html><body><h1>API Practica 3</h1><ul><li><a href='/api/tareas'>/api/tareas</a></li><li><a href='/api/tareas-externas'>/api/tareas-externas</a></li><li><a href='/api/tareas-externas/1'>/api/tareas-externas/1</a></li><li>POST <code>/api/ml/sentimiento</code> (Análisis de sentimiento con ML.NET)</li><li><a href='/openapi'>/openapi</a> (JSON OpenAPI)</li><li><a href='/swagger'>/swagger</a> (Swagger UI)</li></ul></body></html>", "text/html"));
 
