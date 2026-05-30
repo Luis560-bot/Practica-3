@@ -84,3 +84,31 @@ Validaciones:
 - Si la API externa no responde devuelve `502` o `504` según el error.
 - Si el ID no existe devuelve `404`.
 - Se mapea el JSON externo a un DTO propio antes de devolverlo.
+
+## ML.NET: análisis de sentimiento
+
+Endpoint disponible:
+
+- `POST /api/ml/sentimiento`
+
+Ejemplo de request:
+
+```json
+{
+	"comentario": "La tarea fue completada correctamente y el sistema funciona bien"
+}
+```
+
+Respuesta esperada:
+
+```json
+{
+	"comentario": "La tarea fue completada correctamente y el sistema funciona bien",
+	"sentimiento": "Positivo"
+}
+```
+
+Clasificación posible:
+
+- `Positivo`
+- `Negativo`
